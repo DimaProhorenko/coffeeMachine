@@ -24,4 +24,8 @@ public abstract class Coffee {
 	public int getAmountOfMilk() { return amountOfMilk; }
 	
 	public int getAmountOfBeans() { return amountOfBeans; }
+	
+	public int[] getAllAmount() {
+		return new int[] {amountOfWater, amountOfMilk, amountOfBeans, 1};
+	}
 }

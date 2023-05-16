@@ -28,6 +28,7 @@ public class CoffeeMachineDriver {
 		int beans = scanner.nextInt();
 		System.out.println("Write how many of disposable cups you want to add: ");
 		int cups = scanner.nextInt();
+		scanner.nextLine();
 		List<Inventory> inventory = new ArrayList<>();
 		inventory.add(new Ingredient("water", "ml", water));
 		inventory.add(new Ingredient("milk", "ml", milk));
@@ -50,9 +51,24 @@ public class CoffeeMachineDriver {
 	}
 	
 	public String getUserInputForMenu() {
-		System.out.println("Write action (buy, fill, take): ");
+		System.out.println("Write action (buy, fill, take, remaining, exit): ");
 		String choise = scanner.nextLine();
 		return choise;
+	}
+	
+	public int getTypeOfCoffeeFromUser() {
+		String correctType = "1 2 3 back";
+		String choise = "s";
+		while (!correctType.contains(choise)) {
+			System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino, back - to main menu:");
+			choise = scanner.next();
+			scanner.nextLine();
+		}
+		
+		if(choise.equals("back")) {
+			return 0;
+		}
+		return Integer.parseInt(choise);
 	}
 	
 	
@@ -60,16 +76,31 @@ public class CoffeeMachineDriver {
 	public static void main(String[] args) {
 		CoffeeMachineDriver cmd = new CoffeeMachineDriver();
 		CoffeeMachine cm = new CoffeeMachine(cmd.availableInventory, 550);
-		cm.showInventory();
-		String nextAction = cmd.getUserInputForMenu();
-		switch(nextAction) {
-		case "take":
-			cm.getMoney();
-			break;
-		case "fill":
-			cm.fill(cmd.getFillIngredients());
-			cm.showInventory();
-			break;
+		boolean isMachineOn = true;
+		while(isMachineOn) {
+			String nextAction = cmd.getUserInputForMenu();
+			switch(nextAction) {
+			case "take":
+				cm.getMoney();
+				break;
+			case "fill":
+				cm.fill(cmd.getFillIngredients());
+				break;
+			case "buy":
+				int typeOfCoffee = cmd.getTypeOfCoffeeFromUser();
+				if (typeOfCoffee > 0) {
+					cm.makeCoffee(typeOfCoffee);
+				}
+				break;
+			case "remaining":
+				cm.showInventory();
+				break;
+			case "exit":
+				isMachineOn = false;
+				break;
+			default:
+				System.out.println("Wrong input");
+			}
 		}
 	}
 }

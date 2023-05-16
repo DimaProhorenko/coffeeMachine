@@ -1,5 +1,6 @@
 package machine;
 import java.util.List;
+import coffee.*;
 
 public class CoffeeMachine {
 	private int money;
@@ -47,7 +48,7 @@ public class CoffeeMachine {
 	}
 	
 	public void getMoney() {
-		System.out.printf("I gave you $%d", money);
+		System.out.printf("I gave you $%d\n", money);
 		money = 0;
 	}
 	
@@ -58,6 +59,55 @@ public class CoffeeMachine {
 			currentIngredient.setAmount(currentAmmount + inventory.get(i).getAmount());
 		}
 	}
+	
+	public void makeCoffee(int type) {
+		Coffee coffee;
+		switch(type) {
+		case 2:
+			coffee = new Latte();
+			break;
+		case 3:
+			coffee = new Cappuccino();
+			break;
+		default:
+			coffee = new Espresso();
+			break;
+		}
+		
+		String isEnough = checkIfEnoughInventory(coffee);
+		
+		if(isEnough.length() == 0) {
+			reduceInventoryAmount(coffee);
+			System.out.println("I have enough resources, making you a coffee!");
+		} else {
+			System.out.println(isEnough);
+		}
+	}
+	
+	private void reduceInventoryAmount(Coffee coffee) {
+		for(int i = 0; i < availableInventory.size(); i++) {
+			Inventory currentInv = availableInventory.get(i);
+			int currentAmount = currentInv.getAmount();
+			currentInv.setAmount(currentAmount - coffee.getAllAmount()[i]);
+		}
+		money += coffee.getPrice();
+	}
+	
+	private String checkIfEnoughInventory(Coffee coffee) {
+		String result = "";
+		
+		for (int i = 0; i < availableInventory.size(); i++) {
+			Inventory current = availableInventory.get(i);
+			if (current.getAmount() < coffee.getAllAmount()[i]) {
+				result = String.format("Sorry, not enough %s!", current.getName());
+				break;
+			}
+		}
+		
+		return result;
+		
+	}
+	
 	
 	private boolean checkIfCanMakeCoffee(int numOfRequiredCups) {
 		if (numOfRequiredCups <= producibleCups) {
