@@ -1,21 +1,16 @@
 package machine;
 
-public class Ingredient {
-	private final String name;
-	private int amount;
-	private final String unit;
+public class Ingredient extends Inventory {
+	private String unit;
 	
 	
 	public Ingredient(String name, String unit, int amount) {
-		this.name = name;
+		super(name, amount);
 		this.unit = unit;
-		this.amount = amount;
 	}
 	
 	
-	public int getAmount() {
-		return amount;
-	}
+	
 	
 	public String toString() {
 		return String.format("%d %s of %s", amount, unit, name);
